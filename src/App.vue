@@ -1,28 +1,135 @@
-<!-- src/App.vue -->
 <template>
-  <div>
-    <h1>Text Comparison Tool</h1>
-    <TextInput @updateTexts="updateTexts" />
-    <CompareButton :text1="text1" :text2="text2" @result="setResult" />
-    <TextOutput :output="result" />
+  <div class="container">
+    <h1 class="heading">AUTO AMP</h1>
+
+    <!-- Help dropdown -->
+    <div class="help-container">
+      <button class="button help-button" @click="showHelp = !showHelp">
+        {{ showHelp ? 'Verberg uitleg' : 'Toon uitleg' }}
+      </button>
+
+      <div v-if="showHelp" class="help-text">
+        <p>
+          Welkom bij <strong>AUTO AMP</strong>! Deze tool helpt je verschillen
+          tussen twee teksten te vergelijken en automatisch om te zetten in
+          AMPscript voor Salesforce Marketing Cloud (SFMC).
+        </p>
+        <ol>
+          <li>
+            <strong>Vul de teksten in:</strong> Er zijn twee hoofdvelden: eerste
+            tekst (origineel) en tweede tekst (nieuw of aangepast). De tool
+            vergelijkt deze karakter voor karakter.
+          </li>
+          <li>
+            <strong>AMPscript-voorwaarde instellen:</strong> Voer een voorwaarde
+            in zoals <code>@OLD = true</code> of <code>@AGE > 60</code>. De
+            verschillen worden in een IF...ELSE...ENDIF blok gezet.
+          </li>
+          <li>
+            <strong>(Optioneel) Derde input:</strong> Vink "Add third input"
+            aan om een extra tekstveld te gebruiken met een eigen voorwaarde.
+          </li>
+          <li>
+            <strong>Compare klikken:</strong> De tool genereert SFMC AMPscript
+            in het uitvoerveld.
+          </li>
+          <li>
+            <strong>Kopiëren:</strong> Klik op "Copy" om de AMPscript te
+            kopiëren naar je klembord.
+          </li>
+          <li>
+            <strong>Start opnieuw:</strong> Klik op "Clear" om alle velden te
+            legen en opnieuw te beginnen.
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Text inputs -->
+    <TextInput @updateTexts="updateTexts" class="mb-5" />
+
+    <!-- AMPscript condition -->
+    <div class="mb-5">
+      <label for="condition">AMPscript Condition:</label>
+      <input
+        id="condition"
+        v-model="condition"
+        placeholder="@OLD = true"
+        class="text-input"
+      />
+    </div>
+
+    <!-- Checkbox -->
+    <div class="checkbox-label mb-5">
+      <input type="checkbox" v-model="addThirdInput" />
+      Add third input for language
+    </div>
+
+    <!-- Third input fields -->
+    <div v-if="addThirdInput" class="mb-5">
+      <input
+        v-model="thirdInput"
+        placeholder="Enter third input"
+        class="text-input"
+      />
+      <input
+        v-model="thirdCondition"
+        placeholder="Condition for third input"
+        class="text-input mt-5"
+      />
+    </div>
+
+    <!-- Buttons -->
+    <div class="mb-5">
+      <CompareButton 
+        :text1="text1" 
+        :text2="text2" 
+        :condition="condition"
+        :third-input="addThirdInput ? thirdInput : null"
+        :third-condition="addThirdInput ? thirdCondition : null"
+        @result="setResult"
+        class="button"
+      />
+      <button @click="clearAll" class="button" style="margin-left:10px;">Clear</button>
+    </div>
+
+    <!-- Output and Copy -->
+    <div style="position: relative;">
+      <TextOutput :output="sfmcOutput" ref="outputRef" class="output" />
+      <button 
+        @click="copyToClipboard" 
+        :disabled="!sfmcOutput"
+        class="button"
+        style="position:absolute; top:5px; right:5px; font-size:12px; padding:5px 10px;"
+      >
+        Copy
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import TextInput from './components/TextInput.vue';
-import CompareButton from './components/CompareButton.vue';
-import TextOutput from './components/TextOutput.vue';
+import { ref, watch } from "vue";
+import TextInput from "./components/TextInput.vue";
+import CompareButton from "./components/CompareButton.vue";
+import TextOutput from "./components/TextOutput.vue";
 
-const text1 = ref('');
-const text2 = ref('');
-const result = ref('');
+const text1 = ref("");
+const text2 = ref("");
+const result = ref("");
+const condition = ref("@OLD = true");
+const showHelp = ref(false) // ← reactive property for dropdown
+
+// Third input state
+const addThirdInput = ref(false);
+const thirdInput = ref("");
+const thirdCondition = ref('@language = "F"');
+
+const sfmcOutput = ref("");
+const outputRef = ref(null);
 
 /**
- * Updates the values of text1 and text2 based on the payload object.
- * @param {Object} payload - Object containing the new values of text1 and text2.
- * @property {string} text1 - New value of text1.
- * @property {string} text2 - New value of text2.
+ * Update the text1 and text2 values with the provided payload.
  */
 function updateTexts(payload) {
   text1.value = payload.text1;
@@ -30,10 +137,88 @@ function updateTexts(payload) {
 }
 
 /**
- * Sets the value of the result variable to the given value.
- * @param {string} value - New value of the result variable.
+ * Set the result of the comparison.
+ * This result is already SFMC-ready from diffWords
  */
 function setResult(value) {
   result.value = value;
 }
+
+/*************  ✨ Windsurf Command 🌟  *************/
+/**
+ * Clear all text inputs and output.
+ */
+function clearAll() {
+  try {
+    if (text1.value !== null) text1.value = '';
+    if (text2.value !== null) text2.value = '';
+    if (result.value !== null) result.value = '';
+    if (sfmcOutput.value !== null) sfmcOutput.value = '';
+    if (condition.value !== null) condition.value = '@OLD = true';
+  text1.value = ''
+  text2.value = ''
+  result.value = ''
+  sfmcOutput.value = ''
+  condition.value = '@OLD = true'
+
+    // Reset third input and checkbox
+    if (addThirdInput.value !== null) addThirdInput.value = false;
+    if (thirdInput.value !== null) thirdInput.value = '';
+    if (thirdCondition.value !== null) thirdCondition.value = '@language = "F"';
+  } catch (error) {
+    console.error('Error clearing all text inputs and output: ', error);
+  }
+  // Reset third input and checkbox
+  addThirdInput.value = false
+  thirdInput.value = ''
+  thirdCondition.value = '@language = "F"'
+}
+/*******  a032c53d-5074-45d4-ae48-df8c32fa88d9  *******/  
+
+/**
+ * Copy SFMC output to clipboard.
+ */
+function copyToClipboard() {
+  if (!sfmcOutput.value) return;
+  navigator.clipboard
+    .writeText(sfmcOutput.value)
+    .then(() => alert("Copied to clipboard!"))
+    .catch((err) => alert("Failed to copy: " + err));
+}
+
+/**
+ * Watch the result and wrap it with third input if enabled
+ */
+watch(result, (newVal) => {
+  sfmcOutput.value = newVal
+})
 </script>
+
+<style scoped>
+.help-container {
+  margin-bottom: 20px;
+}
+
+.help-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 15px;
+  cursor: pointer;
+}
+
+.help-button:hover {
+  background-color: #0056b3;
+}
+
+.help-text {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 5px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  font-size: 0.95em;
+  line-height: 1.5em;
+}
+</style>

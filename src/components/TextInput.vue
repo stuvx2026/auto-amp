@@ -1,13 +1,13 @@
 <!-- src/components/TextInput.vue -->
 <template>
-  <div>
-    <input v-model="text1" placeholder="Enter first text" />
-    <input v-model="text2" placeholder="Enter second text" />
+  <div class="text-input-container">
+    <textarea class="text-input first-input area" v-model="text1" placeholder="Voer eerste tekst in"></textarea>
+    <textarea class="text-input second-input area" v-model="text2" placeholder="Voer tweede tekst in"></textarea>
   </div>
 </template>
 
 <script setup>
-import { ref, defineEmits } from 'vue';
+import { ref, watch } from 'vue';
 
 const text1 = ref('');
 const text2 = ref('');

@@ -1,52 +1,45 @@
-// src/components/diffUtils.js
+export function diffWords(oldWord, newWord, condition = '@OLD = true') {
+  if (oldWord === newWord) return oldWord;
 
-/**
- * Compares two words character by character and returns AMPscript-wrapped differences
- * @param {string} oldWord 
- * @param {string} newWord 
- * @returns {string} - AMPscript wrapped word
- */
-export function diffWords(oldWord, newWord) {
-  if (oldWord === newWord) return oldWord; // identical word
+  const oldChars = oldWord.split('');
+  const newChars = newWord.split('');
+  let result = '';
+  let i = 0;
+  const maxLength = Math.max(oldChars.length, newChars.length);
 
-  let oldChars = oldWord.split('');
-  let newChars = newWord.split('');
-  let maxLength = Math.max(oldChars.length, newChars.length);
-
-  let oldDiff = '';
-  let newDiff = '';
-
-  for (let i = 0; i < maxLength; i++) {
+  while (i < maxLength) {
     const o = oldChars[i] || '';
     const n = newChars[i] || '';
-    if (o !== n) {
-      oldDiff += o;
-      newDiff += n;
+
+    if (o === n) {
+      result += o;
+      i++;
+    } else {
+      let oldDiff = '';
+      let newDiff = '';
+      while (i < maxLength && (oldChars[i] !== newChars[i])) {
+        oldDiff += oldChars[i] || '';
+        newDiff += newChars[i] || '';
+        i++;
+      }
+      result += `%%[IF ${condition} THEN]${oldDiff}%%[ELSE]${newDiff}%%[ENDIF]%%`;
     }
   }
 
-  // Wrap only differences in AMPscript
-  return `[AMP IF @OLD = true] ${oldDiff} [else] ${newDiff} [endif]`;
+  return result;
 }
 
-/**
- * Compares two sentences and returns AMPscript-formatted output
- * @param {string} oldText 
- * @param {string} newText 
- * @returns {string}
- */
-export function compareTexts(oldText, newText) {
+export function compareTexts(oldText, newText, condition = '@OLD = true') {
   const oldWords = oldText.split(' ');
   const newWords = newText.split(' ');
   const maxLength = Math.max(oldWords.length, newWords.length);
 
   const result = [];
-
   for (let i = 0; i < maxLength; i++) {
     const oldWord = oldWords[i] || '';
     const newWord = newWords[i] || '';
-    result.push(diffWords(oldWord, newWord));
+    result.push(diffWords(oldWord, newWord, condition));
   }
 
-  return result.join(' ');
+  return result.join(' ').trim();
 }

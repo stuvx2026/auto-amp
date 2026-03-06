@@ -6,7 +6,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/auto-amp/', // <-- add this line! Replace 'auto-amp' with your repo name
+  base: '/Auto-AMP/', // <-- add this line! Replace 'auto-amp' with your repo name
   plugins: [
     vue(),
     vueDevTools(),
