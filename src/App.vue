@@ -4,7 +4,7 @@
 
 <template>
   <main>
-    <h1>Hello Vue TEST🚀</h1>
+    <h1>Hello Vue TEST 🚀</h1>
   </main>
 </template>
 
