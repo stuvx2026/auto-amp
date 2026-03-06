@@ -21,6 +21,6 @@ jobs:
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          publish_dir: C:\Users\mczwi\Proton Drive\marczwiers\My files\Coding\Webapps\Auto AMP\Auto-AMP\dist
           # optional: force push to overwrite if necessary
           force_orphan: true
