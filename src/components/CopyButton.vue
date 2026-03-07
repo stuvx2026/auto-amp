@@ -1,12 +1,9 @@
 <template>
-  <div>
-    <img src="../assets/Images/old-young.gif" alt="Doubting" class="gif_1" />
-    <textarea class="text-output" readonly :value="output" rows="5"></textarea>
-  </div>
+  <button @click="copyToClipboard" class="copy-button" v-if="output">Copy</button>
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, defineEmits } from "vue";
 
 const props = defineProps({
   output: String,
@@ -15,8 +12,11 @@ const props = defineProps({
 const emit = defineEmits(['copy']);
 
 function copyToClipboard() {
+  console.log('copyToClipboard called'); // Log statement
   emit('copy');
 }
+
+console.log('output:', props.output); // Log statement
 </script>
 
 <style scoped>

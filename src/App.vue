@@ -93,16 +93,10 @@
     </div>
 
     <!-- Output and Copy -->
-    <div style="position: relative;">
+    <div class="output-container" style="position: relative;">
       <TextOutput :output="sfmcOutput" ref="outputRef" class="output" />
-      <button 
-        @click="copyToClipboard" 
-        :disabled="!sfmcOutput"
-        class="button"
-        style="position:absolute; top:5px; right:5px; font-size:12px; padding:5px 10px;"
-      >
-        Copy
-      </button>
+      <CopyButton :output="sfmcOutput" @copy="copyToClipboard" />
+
     </div>
   </div>
 </template>
@@ -112,6 +106,8 @@ import { ref, watch } from "vue";
 import TextInput from "./components/TextInput.vue";
 import CompareButton from "./components/CompareButton.vue";
 import TextOutput from "./components/TextOutput.vue";
+import CopyButton from "./components/CopyButton.vue";
+
 
 const text1 = ref("");
 const text2 = ref("");
@@ -175,10 +171,21 @@ function clearAll() {
 /*******  a032c53d-5074-45d4-ae48-df8c32fa88d9  *******/  
 
 /**
- * Copy SFMC output to clipboard.
+ * Copy the SFMC output to the clipboard.
+ * @returns {Promise<void>}
  */
 function copyToClipboard() {
+  /**
+   * Check if the SFMC output is empty before attempting to copy.
+   * If it is empty, return and do not attempt to copy.
+   */
   if (!sfmcOutput.value) return;
+  
+  /**
+   * Attempt to copy the SFMC output to the clipboard.
+   * If the copy is successful, alert the user with a success message.
+   * If the copy fails, alert the user with an error message.
+   */
   navigator.clipboard
     .writeText(sfmcOutput.value)
     .then(() => alert("Copied to clipboard!"))
@@ -193,31 +200,4 @@ watch(result, (newVal) => {
 })
 </script>
 
-<style scoped>
-.help-container {
-  margin-bottom: 20px;
-}
 
-.help-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 8px 15px;
-  cursor: pointer;
-}
-
-.help-button:hover {
-  background-color: #0056b3;
-}
-
-.help-text {
-  background-color: #f9f9f9;
-  padding: 15px;
-  border-radius: 5px;
-  margin-top: 5px;
-  border: 1px solid #ddd;
-  font-size: 0.95em;
-  line-height: 1.5em;
-}
-</style>
