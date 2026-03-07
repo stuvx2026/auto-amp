@@ -6,24 +6,24 @@ body {
 }
 /* Layout and container */
 .container {
-    display: flex;
-    flex-direction: column;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
   min-width: 90vw;
   padding: 20px;
   max-width: 600px;
   margin: 0 auto;
-  font-family: Arial, sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   color: #333;
   background: linear-gradient(135deg, #ffecd2, #fcb69f);
 }
 
 /* Headings */
 .heading {
-  font-size: 2em;
-  font-weight: bold;
+  font-size: 5em;
+  font-weight: 400;
   margin-bottom: 20px;
   text-align: center;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .text-input-container {
@@ -62,8 +62,8 @@ body {
 }
 
 /* Output area */
-.output {
-  width: 100%;
+.text-output {
+  width: 400px;
   min-height: 100px;
   padding: 10px;
   border: 1px solid #999;

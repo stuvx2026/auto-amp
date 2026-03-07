@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <h1 class="heading">AUTO AMP</h1>
-
     <!-- Help dropdown -->
     <div class="help-container">
       <button class="button help-button" @click="showHelp = !showHelp">
