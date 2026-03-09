@@ -49,7 +49,7 @@
 
     <!-- AMPscript condition -->
     <div class="mb-5">
-      <label for="condition">AMPscript Condition:</label>
+      <label class="cond-label" for="condition">AMPscript Condition:</label>
       <input
         id="condition"
         v-model="condition"
@@ -59,9 +59,9 @@
     </div>
 
     <!-- Checkbox -->
-    <div class="checkbox-label mb-5">
-      <input type="checkbox" v-model="addThirdInput" />
-      Add third input for language
+    <div class="checkbox-label mb-5 cond-label">
+      Voeg taal toe! 
+      <input class="checkbox" type="checkbox" v-model="addThirdInput" />
     </div>
 
     <!-- Third input fields -->

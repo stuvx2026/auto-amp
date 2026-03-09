@@ -161,6 +161,18 @@ body {
   font-size: 1em;
 }
 
+.checkbox {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.cond-label {
+  color: #fffc40;
+  padding-right: 20px;
+  font-size: 18px;
+}
+
 .help-button:hover {
   background-color: #0056b3;
 }

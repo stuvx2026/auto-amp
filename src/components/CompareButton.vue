@@ -1,6 +1,6 @@
 <!-- src/components/CompareButton.vue -->
 <template>
-  <button @click="handleCompare" style="padding:10px 20px;">Compare</button>
+  <button @click="handleCompare" style="padding:10px 20px;">Amp it!</button>
 </template>
 
 <script setup>
@@ -17,6 +17,15 @@ const props = defineProps({
 
 const emit = defineEmits(['result'])
 
+/**
+ * Compare two texts based on a condition and optionally wrap the result with a third input and condition.
+ * Emits the result as a string.
+ * @example
+ * handleCompare('old text', 'new text', '@ OLD = true');
+ * // Emits 'old text'
+ * handleCompare('old text', 'new text', '@OLD = true', 'third input', '@language = "F"');
+ * // Emits '%%[IF @language = "F" THEN]third input%%[ELSE]old text%%[ENDIF]%%'
+ */
 function handleCompare() {
   // Compare the first two texts
   let output = compareTexts(props.text1, props.text2, props.condition)
