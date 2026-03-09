@@ -32,7 +32,7 @@ function handleCompare() {
 
   // Wrap with third input condition only if provided
   if (props.thirdInput && props.thirdCondition) {
-    output = `%%[IF ${props.thirdCondition} THEN]${props.thirdInput}%%[ELSE]${output}%%[ENDIF]%%`
+    output = `%%[IF ${props.thirdCondition} THEN]%%${props.thirdInput}%%[ELSE]%%${output}%%[ENDIF]%%`
   }
 
   emit('result', output)

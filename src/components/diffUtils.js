@@ -22,7 +22,7 @@ export function diffWords(oldWord, newWord, condition = '@OLD = true') {
         newDiff += newChars[i] || '';
         i++;
       }
-      result += `%%[IF ${condition} THEN]${oldDiff}%%[ELSE]${newDiff}%%[ENDIF]%%`;
+      result += `%%[IF ${condition} THEN]%%${oldDiff}%%[ELSE]%%${newDiff}%%[ENDIF]%%`;
     }
   }
 
